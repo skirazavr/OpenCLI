@@ -5,14 +5,16 @@ const configSchema = z.object({
     apiKey: z.string().default(""),
     baseURL: z.url(),
     model: z.string().min(1),
-    provider: z.string().optional()
+    provider: z.string().optional(),
+    maxIterations: z.coerce.number().int().min(1).max(1000).default(100)
 });
 
 const result = configSchema.safeParse({
     apiKey: process.env.OPENCLI_API_KEY ?? "",
     baseURL: process.env.OPENCLI_BASE_URL,
     model: process.env.OPENCLI_MODEL,
-    provider: process.env.OPENCLI_PROVIDER
+    provider: process.env.OPENCLI_PROVIDER,
+    maxIterations: process.env.OPENCLI_MAX_ITERATIONS
 });
 
 if (!result.success) {
@@ -23,7 +25,8 @@ export const Config = Object.freeze({
     apiKey: result.data.apiKey,
     baseURL: result.data.baseURL,
     model: result.data.model,
-    providerName: result.data.provider?.trim() || detectProviderName(result.data.baseURL)
+    providerName: result.data.provider?.trim() || detectProviderName(result.data.baseURL),
+    maxIterations: result.data.maxIterations
 });
 
 function detectProviderName(baseURL: string): string {

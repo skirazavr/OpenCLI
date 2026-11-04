@@ -4,6 +4,7 @@ import type { ModelRequest } from "../protocol/ModelRequest.js";
 import type { ModelResponse } from "../protocol/ModelResponse.js";
 import type { AgentEvent } from "../protocol/ProviderEvent.js";
 import type { ToolRegistry, ApprovalHandler } from "../tools/ToolRegistry.js";
+import { Config } from "../config/Config.js";
 
 export interface AgentResult {
     answer: string;
@@ -14,7 +15,7 @@ export interface AgentResult {
 type AgentEventHandler = (event: AgentEvent) => void;
 
 export class AgentLoop {
-    private readonly maxIterations = 20;
+    private readonly maxIterations = Config.maxIterations;
 
     constructor(private readonly provider: ModelProvider, private readonly registry: ToolRegistry, private readonly approve: ApprovalHandler, private readonly model: string) {
     }
@@ -91,7 +92,7 @@ export class AgentLoop {
             });
 
             return {
-                answer: "Достигнут предел итераций агента",
+                answer: "The agent has reached the maximum iteration limit",
                 messages,
                 iterations: this.maxIterations
             };
