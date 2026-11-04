@@ -1,5 +1,5 @@
 import type { AgentEvent } from "../../protocol/ProviderEvent.js";
-import type { ActivityKind, ActivityStatus, AgentActivityItem, AgentActivityState } from "./activity/ActivityTypes.js";
+import type { ActivityKind, ActivityStatus, AgentActivityItem, AgentActivityState } from "./ActivityTypes.js";
 
 const MAX_ACTIVITIES = 100;
 
@@ -251,15 +251,22 @@ export class ActivityManager {
         return item;
     }
 
-    private updateActivity(
-        id: string,
-        updates: Partial<AgentActivityItem>
-    ): void {
-        this.state.items = this.state.items.map(item =>
-            item.id === id
-                ? { ...item, ...updates }
-                : item
-        );
+    private updateActivity(id: string, updates: Partial<AgentActivityItem>): void {
+        const current = this.state.items.find(item => item.id === id);
+
+        if (!current) {
+            return;
+        }
+
+        if (this.isFinalStatus(current.status) && updates.status !== undefined && !this.isFinalStatus(updates.status)) {
+            return;
+        }
+
+        this.state.items = this.state.items.map(item => item.id === id ? { ...item, ...updates } : item);
+    }
+
+    private isFinalStatus(status: ActivityStatus): boolean {
+        return (status === "completed" || status === "failed" || status === "rejected");
     }
 
     private completeRunningActivities(): void {

@@ -6,6 +6,7 @@ import type { ModelCapabilities } from "../capabilities/ModelCapabilities.js";
 export interface ModelProvider {
     readonly id: string;
     readonly displayName: string;
+    readonly model: string;
     readonly capabilities: ModelCapabilities;
 
     chat(request: ModelRequest, signal?: AbortSignal): Promise<ModelResponse>;

@@ -119,18 +119,9 @@ function ActivityRow({ item }: { item: AgentActivityItem }) {
                 <Text color={item.status === "running" ? "cyan" : "white"} bold={item.status === "running"}>
                     {item.title}
                 </Text>
-                {item.status === "running" && (
-                    <Text color="cyan">  Running...</Text>
-                )}
-                {item.status === "waiting_approval" && (
-                    <Text color="#FFFF55">  Approval required</Text>
-                )}
-                {item.status === "failed" && (
-                    <Text color="#FF5555">  Failed</Text>
-                )}
-                {item.status === "rejected" && (
-                    <Text color="gray">  Rejected</Text>
-                )}
+                <Text color={color} dimColor={item.status === "pending"}>
+                    {"  "}{getStatusLabel(item.status)}
+                </Text>
             </Box>
             {item.description && (
                 <Box marginLeft={2}>

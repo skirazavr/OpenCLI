@@ -11,6 +11,7 @@ import type { ProviderEvent } from "../../protocol/ProviderEvent.js";
 export class OpenAICompatibleAdapter implements ModelProvider {
     readonly id: string;
     readonly displayName: string;
+    readonly model: string;
     readonly capabilities = OPENAI_COMPATIBLE_DEFAULTS;
     private readonly client: OpenAI;
     private readonly config: ProviderConfig;
@@ -19,6 +20,7 @@ export class OpenAICompatibleAdapter implements ModelProvider {
         this.config = config;
         this.id = config.id;
         this.displayName = config.name;
+        this.model = config.defaultModel;
         this.client = new OpenAI({
             apiKey: config.apiKey ?? "no-api-key",
             baseURL: config.baseURL,

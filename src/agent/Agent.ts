@@ -218,10 +218,13 @@ export class Agent {
             return;
         }
 
+        const provider = this.providerRegistry.getActive();
+
         this.loop = new AgentLoop(
-            this.providerRegistry.getActive(),
+            provider,
             this.registry,
-            this.approve
+            this.approve,
+            provider.model
         );
     }
 

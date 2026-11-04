@@ -16,7 +16,7 @@ type AgentEventHandler = (event: AgentEvent) => void;
 export class AgentLoop {
     private readonly maxIterations = 20;
 
-    constructor(private readonly provider: ModelProvider, private readonly registry: ToolRegistry, private readonly approve: ApprovalHandler) {
+    constructor(private readonly provider: ModelProvider, private readonly registry: ToolRegistry, private readonly approve: ApprovalHandler, private readonly model: string) {
     }
 
     async run(history: ModelMessage[], userMessage: string, signal?: AbortSignal, onEvent?: AgentEventHandler): Promise<AgentResult> {
@@ -35,6 +35,7 @@ export class AgentLoop {
                 this.throwIfAborted(signal);
 
                 const request: ModelRequest = {
+                    model: this.model,
                     messages,
                     ...(tools.length > 0 ? { tools } : {})
                 };
